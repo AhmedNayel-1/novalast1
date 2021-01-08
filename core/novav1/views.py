@@ -23,21 +23,53 @@ from calls.models import calls
 from calls.models import calls
 from event_manage.models import Events
 from event_manage.models import Events
-from datetime import datetime ,date
+from datetime import datetime ,date ,timedelta
+
 def create_ref_code():
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=20))
 
-class PatientCreateView(generic.CreateView):
-    template_name="core/templates/Patient_form.html"
-    model = models.Patient
-    form_class = forms.PatientForm
-    success_url = "/"
+# class PatientCreateView(generic.CreateView):
+#     template_name="core/templates/Patient_form.html"
+#     model = models.Patient
+#     form_class = forms.PatientForm
+#     success_url = "/"
     
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["objects"] = self.model.objects.all()
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["objects"] = self.model.objects.all()
+#         return context
+
+
+def PatientCreateView(request):
+    objects         =   models.Patient.objects.all()
+    ComeFrom        =   models.Comefrom.objects.all()
+    doctor          =   models.DoctorOut.objects.all()
+    if request.method == 'POST':
+        form = forms.PatientForm(request.POST)
+        if form.is_valid():
+            form.save(commit=True)
+            #form.PatientBbarcode = request.POST.get(False, 'PatientBbarcode')
+            #form.ComeFrom        =  models.Comefrom.objects.get(pk=request.POST.get('ComeFrom'))
+            # pf  = request.POST.get('PatientFfriend')
+            # doc = request.POST.get('doctor')
+            # if pf is not None:
+            #     form.PatientFfriend  =  models.Patient.objects.get(pk=request.POST.get('PatientFfriend', 'False'))
+            #    if doc is not None:  
+            #        form.doctor          =  models.DoctorOut.objects.get(pk=request.POST.get('doctor', 'False'))
+            form.save()
+            print(pf)
+            print(doc)
+            return redirect("/")
+           #return redirect('items-list2', pid=pid)
+    else:
+        form = forms.PatientForm()
+    return render(request, 'core/templates/Patient_form.html', {'form':form,'objects': objects,'ComeFrom':ComeFrom,'doctor':doctor}) 
+
+
+
+
+
 
 
 class ReservationCreateView(generic.CreateView):
@@ -93,6 +125,17 @@ class RoomCreateView(generic.CreateView):
         context["objects"] = self.model.objects.all()
         return context
 
+
+class jobsCreateView(generic.CreateView):
+    template_name="core/templates/jobs.html"
+    model=models.Jop
+    form_class=forms.JobForm
+    success_url= "/jobs"    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["objects"] = self.model.objects.all()
+        return context
 
 
 # class AddDodtonIN(generic.CreateView):
@@ -156,6 +199,69 @@ def PatientDetailView(requset,id):
     balls_transaction= ballsestrans.objects.filter(Q(from_user=id) | Q(to_user=id) )
 
     #totalCansel = Invoice.objects.filter(stut_order_id=2).count()
+    cash=models.Order.objects.filter( Patient_id=id)   #order_type__in=[1, 4]
+    
+   
+    total_price=0
+    for value in cash:
+        total_price += value.TotalPrice
+
+    total_cash=0
+    for value in cash:
+        total_cash += value.Cash 
+
+    total_Remmaining=0
+    for value in cash:
+        if value.Discount:
+           total_Remmaining += value.Discount
+    Total_required = total_price - total_cash-total_Remmaining
+
+    order_all_ballses= models.Order.objects.filter( order_type__in=[1, 2,3],Patient_id=id) 
+    Patientdata  =   models.Patient.objects.get(id=id)
+  
+    #Add balls efects models
+    order_transfer_ballses = models.Order.objects.filter( order_type__in=[1, 2],Patient_id=id) 
+
+    #Cuts ballses  models
+    event= Events.objects.filter(event_name=models.Patient.objects.get(pk=id))
+    order_transfer_ballses = models.Order.objects.filter( order_type=3,Patient_id=id)
+
+    #Add ballsese sum
+    total_plus_balls_in_order=0
+    for value in order_all_ballses:
+        total_plus_balls_in_order += value.balls
+
+    #Cut ballses sum    
+
+    total_ballse_in_event=0
+    
+    for value in event:
+        if value.session_used_balls is not None :
+           total_ballse_in_event +=   value.session_used_balls
+        else:
+            total_ballse_in_event=0        
+
+    order_transfer_ballses=0
+    for value in range(order_transfer_ballses):
+        order_transfer_ballses += value.balls
+
+    #total cut ballses 
+    total_cut_ballses =total_ballse_in_event + order_transfer_ballses
+
+    #total balls reminning
+
+    total_ballses_remining = total_plus_balls_in_order - total_cut_ballses
+
+    
+
+    objects_list = list(zip_longest(order_all_ballses, event))
+
+    #age
+    birth_date = Patientdata.Birtdate 
+    age = (date.today() - birth_date) // timedelta(days=365.2425)
+    
+
+
      
     context={
         'PatientDetail':PatientDetail,
@@ -167,6 +273,16 @@ def PatientDetailView(requset,id):
         'Refunds':Refunds,
         'callshistory':callshistory,
         'balls_transaction':balls_transaction,
+        'total_price':total_price,
+        'cash':cash,
+        'total_cash':total_cash,
+        'total_Remmaining':total_Remmaining,
+        'Total_required':Total_required,
+        'objects_list':objects_list,
+        'total_plus_balls_in_order':total_plus_balls_in_order,
+        'total_cut_ballses':total_cut_ballses,
+        'total_ballses_remining':total_ballses_remining,
+        'age':age
     }
 
     return render(requset,'core/templates/Patient-detail.html',context)
@@ -472,7 +588,7 @@ def add_to_cart(request, id , pid ):
     coupon=models.Coupon.objects.all
     totalBallce = 0
     for p in invoce:
-            totalBallce += p.item.CountBalces *p.quantity
+            totalBallce += p.item.BalcesNumber *p.quantity
     # if coupon:
     #     total -= coupon.amount
     totalamount = 0
@@ -501,7 +617,7 @@ def add_to_cart(request, id , pid ):
             order_item.save()
             # totalBallce = 0
             # for p in invoce:
-            #         totalBallce += p.item.CountBalces * (p.quantity+1)
+            #         totalBallce += p.item.BalcesNumber * (p.quantity+1)
             # # if coupon:
             # #     total -= coupon.amount
             # totalamount = 0
@@ -518,7 +634,7 @@ def add_to_cart(request, id , pid ):
             
         #     #user = request.user,
         #     transaction_type= 4,
-        #     ballses_count= invoce.item.CountBalces
+        #     ballses_count= invoce.item.BalcesNumber
 
         # )
 
@@ -831,7 +947,8 @@ def just_payment(request):
 
         
         return redirect ('cashbalance',pid=pid)
-    return render(request, 'core/templates/payments.html',{'person':person ,'orders':orders}) 
+    return render(request, 'core/templates/payments.html',{'person':person ,'orders':orders})
+    
 
 
 
@@ -887,7 +1004,8 @@ def cashbalance(request ,pid):
            'total_Remmaining':total_Remmaining,
            'Total_required':Total_required
     }
-    return render(request, 'core/templates/cashbalance.html', context)
+    return render(request, 'core/templates/includesdetils/cash.html', context)
+    #return render(request, 'core/templates/cashbalance.html', context)
 
 
 
@@ -938,7 +1056,8 @@ def ballsbalance(request ,pid):
            
            
     }
-    return render(request, 'core/templates/ballsbalance.html', context)
+    #return render(request, 'core/templates/ballsbalance.html', context)     includesdetils
+    return render(request, 'core/templates/includesdetils/pulses.html', context) 
 
 
 
@@ -961,3 +1080,35 @@ def reserv(request):
         
         return redirect ("/")
     return render(request, 'core/templates/eventsreserv.html',{'person':person}) 
+
+
+
+def add_new_client(request):
+    person  = models.Patient.objects.all()
+    orders  = models.Order.objects.all()
+    Comefrom= models.Comefrom.objects.all()  
+    Jop     = models.Jop.objects.all()
+    DoctorOut=models.DoctorOut.objects.all()
+    if request.method=='POST':
+       # PatientFfriend = models.Patient.objects.get(pk=int(request.POST.get('frindname')))
+        #ComeFrom       = models.ComeFrom.objects.get(pk=int(request.POST.get('comefrom')))
+
+        PatientName        = request.POST['fname']
+        PatientSecondName  = request.POST['sname']
+        PatientThirdName   = request.POST['lname']
+        #Birtdate           = request.POST['bdate']
+        user               = request.user
+
+        obj = models.Patient.objects.create(
+            PatientName = PatientName,
+            PatientSecondName = PatientSecondName,
+            PatientThirdName = PatientThirdName,
+            #PatientFfriend= PatientFfriend,
+            #ComeFrom= ComeFrom,
+            #Birtdate= Birtdate,
+            #user = user
+        )
+
+        
+        return redirect ('/')
+    return render(request, 'core/templates/new_client.html',{'person':person ,'orders':orders}) 

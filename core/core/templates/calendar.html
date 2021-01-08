@@ -1,3 +1,4 @@
+
 {% extends "layouts/base.html" %}
 {% load bootstrap4 %}
 {% bootstrap_css %}
@@ -15,14 +16,14 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="/static/assets/plugins/fontawesome-free/css/all.min.css">
   <!-- fullCalendar -->
-  <!-- <link rel="stylesheet" href="/static/assets/plugins/fullcalendar/main.min.css"> -->
-  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.1.1/fullcalendar.css'>
+  <link rel="stylesheet" href="/static/assets/plugins/fullcalendar/main.min.css">
   <link rel="stylesheet" href="/static/assets/plugins/fullcalendar-daygrid/main.min.css">
   <link rel="stylesheet" href="/static/assets/plugins/fullcalendar-timegrid/main.min.css">
   <link rel="stylesheet" href="/static/assets/plugins/fullcalendar-bootstrap/main.min.css">
   <link rel="stylesheet" href="/static/assets/plugins/fullcalendar-scheduler/main.min.css">
- 
-  
+  <script src="/static/assets/plugins/fullcalendar-scheduler/main.js"></script>
+  <script src="https://unpkg.com/fullcalendar@5.1.0/main.min.js"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar-scheduler/1.10.1/scheduler.min.js" integrity="sha512-Rct1iDIWXv4X96Tc4cZWNJfTn+tOQ0kIvRtHCR+fJ0K7PJrrvtv+OklWRAF/3bZDThiIxggq49vih71cQGqxkA==" crossorigin="anonymous"></script>
   <!-- Theme style -->
   <link rel="stylesheet" href="/static/assets/css/adminlte.min.css">
@@ -59,10 +60,10 @@
       <div class="container-fluid">
         <div class="row mb-1">
           <div class="col-sm-6">
-            
+
           </div>
           <div class="col-sm-6">
-            
+
           </div>
         </div>
       </div><!-- /.container-fluid -->
@@ -82,7 +83,7 @@
                   <!-- the events -->
                   <div id="external-events">
                     <form class="form-inline">
-                
+
                       <div class="filter-group">
                             <!-- <label>Location</label> -->
                             {{ filter.form.event_doctor |as_crispy_field }}
@@ -106,9 +107,9 @@
                   <br>
                   <div>
                       <button type="submit" class="btn btn-primary mb-2">Confirm identity</button>
-                  </div>    
+                  </div>
                     </form>
-                    
+
                   </div>
                 </div>
                 <!-- /.card-body -->
@@ -185,7 +186,7 @@
                   </select>
                   <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                 </div>
-              </div> 
+              </div>
               <div class="col-md-5">
                 <div class="form-group">
                   <label for="exampleInputEmail1">Doctor Name</label>
@@ -195,7 +196,7 @@
                     {%endfor%}
                   </select>
                 </div>
-                
+
               </div>
                   <br>
                       <div class='col-md-5'>
@@ -214,7 +215,7 @@
                             <label for="exampleInputEmail1">To:</label>
                              <div class="input-group date" id="datetimepicker8" data-target-input="nearest">
                                   <input type="text"  name="end" id='apptEndTime' class="form-control datetimepicker-input" data-target="#datetimepicker8"/>
-                                  
+
                                   <div class="input-group-append" data-target="#datetimepicker8" data-toggle="datetimepicker">
                                       <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                   </div>
@@ -233,7 +234,7 @@
                             </select>
                             <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                           </div>
-                        </div> 
+                        </div>
                         <div class="col-md-5">
                           <div class="form-group">
                             <label for="exampleInputEmail1">Clinc</label>
@@ -243,10 +244,10 @@
                               {%endfor%}
                             </select>
                           </div>
-                          
+
                         </div>
-                        
-                      </div> 
+
+                      </div>
                       <div class="container">
                         <!-- <div class="row">
                           <div class='col-md-10'>
@@ -268,16 +269,16 @@
                               {% for item in pr%}
                               <option value={{item.pk}}>{{item.BodyPart}}</option>
                               {%endfor%}
-                              
+
                             </select>
                           </div>
                           <!-- /.form-group -->
                         </div>
                         <!-- /.col -->
-                      </div> 
-                          
+                      </div>
+
                   </div>
-                
+
               <div>
                   <br>
               <button type="submit" class="btn btn-primary">Reserv</button>
@@ -346,7 +347,7 @@
     </div>
   </div>
 </div>
-   
+
   </div>
 
 {% endblock content %}
@@ -389,7 +390,6 @@
   <!-- fullCalendar 2.2.5 -->
   <script src="/static/assets/plugins/moment/moment.min.js"></script>
   <script src="/static/assets/plugins/fullcalendar/main.min.js"></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.1.1/fullcalendar.min.js'></script>
   <script src="/static/assets/plugins/fullcalendar-daygrid/main.min.js"></script>
   <script src="/static/assets/plugins/fullcalendar-timegrid/main.min.js"></script>
   <script src="/static/assets/plugins/fullcalendar-interaction/main.min.js"></script>
@@ -472,7 +472,7 @@
         slotLabelInterval: 15,
         minTime: '00:00:00',
         maxTime: '23:00:00',
-        allDaySlot: false,
+        // allDaySlot: true,
         slotLabelFormat: {
           hour: "numeric",
           minute: "2-digit",
@@ -494,7 +494,7 @@
               { id: 'truck1', title: 'Truck 1' },
               { id: 'truck2', title: 'Truck 2' },
               { id: 'truck3', title: 'Truck 3' }
-        
+
           ],
           headerToolbar: {
           left: 'prev,next today',
@@ -507,13 +507,13 @@
             duration: { days: 2 },
             buttonText: '2 days',
           }
-        }, 
+        },
         resources: [
           { id: 'a', title: 'Room A' },
           { id: 'b', title: 'Room B', eventColor: 'green' },
           { id: 'c', title: 'Room C', eventColor: 'orange' },
           { id: 'd', title: 'Room D', eventColor: 'red' }
-        ], 
+        ],
         events: [
               {% for i in filter.qs %}
                 {
@@ -526,7 +526,7 @@
                        backgroundColor: '#f39c12', //yellow
                        {%else%}
                        backgroundColor: '#f39c12', //yellow
-                    {%endif%} 
+                    {%endif%}
                 },
                 {% endfor %}
         ],
@@ -535,26 +535,32 @@
         eventLimit: true,
         selectable: true,
         selectHelper: true,
-        
-        select: function( start, end, jsEvent, view ) {
-            $('#createEventModal').modal('show');
-                // set values in inputs
-            $('#createEventModal').find('input[name=evtStart]').val(
-                start.format('YYYY-MM-DD HH:mm:ss')
-            );
-            $('#createEventModal').find('input[name=evtEnd]').val(
-                end.format('YYYY-MM-DD HH:mm:ss')
-            );
-            
-            // show modal dialog
-            $('#createEventModal').modal('show');
-        },                                     
+
+        select: function(start, end ,allDay , jsEvent, view) {
+          starttime = moment(start).format("Y-MM-DD HH:mm:ss");
+          endtime =  moment(end).format("Y-MM-DD HH:mm:ss");
+          var mywhen = starttime + ' - ' + endtime;
+          jQuery('#createEventModal #apptStartTime').val(starttime);
+          jQuery('#createEventModal #apptEndTime').val(endtime);
+          jQuery('#createEventModal #apptAllDay').val(allDay);
+          jQuery('#createEventModal #when').text(mywhen);
+          jQuery.noConflict();
+          jQuery('#createEventModal').modal('show');
+
+          $('#event-modal').find('input[name=evtStart]').val(start.format('YYYY-MM-DD HH:mm:ss'));
+          $('#event-modal').find('input[name=evtEnd]').val(end.format('YYYY-MM-DD HH:mm:ss'));
+          
+          // show modal dialog
+          $('#event-modal').modal('show');
+
+
+        },
         eventClick: function(event) {
             // Display the modal and set the values to the event values.
             $('#modal-lg').modal('show');
-            
 
-        },      
+
+        },
         editable  : true,
         droppable : true, // this allows things to be dropped onto the calendar !!!
         drop      : function(info) {

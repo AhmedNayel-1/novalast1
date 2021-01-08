@@ -110,20 +110,20 @@ class Patient(models.Model):
     PatientSecondName = models.CharField(db_column='SecondName', max_length=50, blank=True, null=True)  # Field name made lowercase.
     PatientThirdName = models.CharField(db_column='ThirdName', max_length=50, blank=True, null=True)  # Field name made lowercase.
 
-    Gender = models.ForeignKey('Gender', models.DO_NOTHING, db_column='Id_Gender', blank=True, null=True)
+    Gender = models.ForeignKey('Gender', models.DO_NOTHING, db_column='Id_Gender', blank=True, null=True ,db_constraint=False)
     Active = models.BooleanField(default=True)  # Field name made lowercase.
     PatientCode = models.CharField(db_column='Pationt_Code', max_length=50, blank=True, null=True)  # Field name made lowercase.
     PatientBbarcode = models.CharField(db_column='Pationt_BarCode', max_length=50, blank=True, null=True)  # Field name made lowercase.
     Birtdate = models.DateField( blank=True, null=True) # Field name made lowercase.
-    ComeFrom = models.ForeignKey(Comefrom, models.DO_NOTHING, db_column='Id_ComeFrom', blank=True, null=True)  # Field name made lowercase.
-    PatientFfriend =models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)  # Field name made lowercase.
-    doctor = models.ForeignKey(DoctorOut, models.DO_NOTHING, db_column='Id_Doctor', blank=True, null=True , default=0)  # Field name made lowercase.
+    ComeFrom = models.ForeignKey(Comefrom, models.DO_NOTHING, db_column='Id_ComeFrom', blank=True, null=True,db_constraint=False)  # Field name made lowercase.
+    PatientFfriend =models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True,db_constraint=False)  # Field name made lowercase.
+    doctor = models.ForeignKey(DoctorOut, models.DO_NOTHING, db_column='Id_Doctor', blank=True, null=True , default=0 ,db_constraint=False)  # Field name made lowercase.
     Jop = models.ForeignKey(Jop,  on_delete=models.CASCADE, blank=True, null=True)  # Field name made lowercase.
-    JopArea = models.ForeignKey(Area, models.DO_NOTHING, db_column='JopArea', blank=True, null=True, related_name='JopArea')  # Field name made lowercase.
+    JopArea = models.ForeignKey(Area, models.DO_NOTHING, db_column='JopArea', blank=True, null=True, related_name='JopArea',db_constraint=False)  # Field name made lowercase.
     PlaceJop = models.CharField(db_column='Place_Jop', max_length=150, blank=True, null=True)  # Field name made lowercase.
-    Area = models.ForeignKey(Area, models.DO_NOTHING, db_column='Area', blank=True, null=True, related_name='Area')  # Field name made lowercase.
+    Area = models.ForeignKey(Area, models.DO_NOTHING, db_column='Area', blank=True, null=True, related_name='Area',db_constraint=False)  # Field name made lowercase.
     PatientMobile1= models.CharField(blank=True, null=True, max_length=50)
-    PatientMobile2= models.IntegerField(blank=True, null=True)
+    PatientMobile2= models.CharField(blank=True, null=True, max_length=50)
     #CreatedDate =models.DateField(auto_now_add=True, blank=True, null=True)
  #   PatientPackages= models.ManyToManyField("Packages", related_name="PPackages" )
     BallceBalance=models.IntegerField(default=0)
@@ -134,8 +134,9 @@ class Patient(models.Model):
     Remmainingamount=models.IntegerField(default=0)   
 
 
-    def __str__ (self):
-        return  str(self.PatientName)
+
+    def __str__(self):
+            return str(self.PatientName) +' '+  str(self.PatientSecondName) +' '+   str(self.PatientThirdName)     
 
     def save(self, *args, **kwargs):
             self.RemmainingBalance = self.BallceBalance-self.UsedBalls
@@ -312,7 +313,7 @@ class OrderItem(models.Model):
         return self.quantity * self.item.price
 
     def get_total_balls(self):
-        return self.quantity * self.item.CountBalces
+        return self.quantity * self.item.BalcesNumber
 
     def get_total_discount_item_price(self):
         return self.quantity * self.item.discount_price
@@ -380,7 +381,7 @@ class Order(models.Model):
     # refund_granted   = models.BooleanField(default=False)
 
     TotalPrice       = models.IntegerField(default=0)
-    Discount         = models.IntegerField(default=0)
+    Discount         = models.IntegerField(default=0,blank=True,null=True)
     Net              = models.IntegerField(default=0,blank=True,null=True)
     Cash             = models.IntegerField(default=0)
     Remmaining       = models.IntegerField(default=0)
@@ -395,6 +396,7 @@ class Order(models.Model):
 
     def __str__(self):
         return self.Patient.PatientName
+       
 
     def get_total(self):
         total = 0
@@ -410,7 +412,11 @@ class Order(models.Model):
 
 
     def net(self):
-        return self.TotalPrice - self.Discount 
+        if self.Discount:
+          return self.TotalPrice - self.Discount 
+        else:
+           return self.TotalPrice  
+
          
 
     def remider(self):
@@ -494,7 +500,7 @@ class Transaction(models.Model):
 
 
 class ballses(models.Model):
-    Patient= models.ForeignKey("Patient",  on_delete=models.CASCADE)
+    Patient= models.ForeignKey("Patient",  on_delete=models.CASCADE , blank=True, null=True)
     transaction_type=models.IntegerField()
     ballses_count=models.IntegerField()
 

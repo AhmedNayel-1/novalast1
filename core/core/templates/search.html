@@ -61,7 +61,7 @@ nk Page {% endblock %}
                                <select class="form-control form-control-navbar select2" type="text" placeholder="Search" aria-label="Search" name="q" value="{{request.GET.q}}">
                                   <option selected="selected">search</option>
                                   {% for Patients in Patients %}
-                                  <option value= "{{Patients.PatientName}}">{{Patients.PatientName}}</option>
+                                  <option value= "{{Patients.PatientName}}">{{Patients.PatientName}} {{Patients.PatientSecondName}} {{Patients.PatientThirdName}} {{ Patients.PatientMobile1 }}</option>
                                   {% endfor %}
                   
                   </select>
@@ -79,7 +79,7 @@ nk Page {% endblock %}
                   <select class="form-control select2" style="width: 100%;">
                     <option selected="selected">......</option>
                     {% for Patients in Patients %}
-                    <option value= "{{Patients.PatientName}}">{{Patients.PatientName}}</option>
+                    <option value= "{{Patients.PatientName}}">{{Patients.PatientName}} {{ Patients.PatientMobile1 }}</option>
                     {% endfor %}
                   
                   </select> 
@@ -118,31 +118,25 @@ nk Page {% endblock %}
                                 <thead>
                                 <tr>
                                   <th> Name</th>
-                                  <th> Secend Name</th>
-                                  <th> Third Name</th>
-                                  <th> Gender</th>
-                                  <th> Area</th>
-                                  <th> Mobile</th>
-                                  <th>  Action</th>
+                                  <th> Mobile </th>
+                                  <th> Mobile 2 </th>
+                                  <th> Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {% for result in results %}
                                 
                                 <tr>
-                                  <td>{{ result.PatientName }} {{ result.PatientSecondName }} {{ result.PatientSecondName }}</td>
-                                  <td>{{ result.PatientSecondName }} </td>
-                                  <td>{{ result.PatientThirdName }} </td>
-                                  <td>{{ result.Gender }}</td> 
-                                  <td>{{ result.Area }}</td>
+                                  <td>{{ result.PatientName }} {{ result.PatientSecondName }} {{ result.PatientThirdName }}</td>
                                   <td>{{ result.PatientMobile1 }}</td>
+                                  <td>{{ result.PatientMobile2 }}</td>
                                   <td>
                                    <div>
-                                        <a class="btn btn-warning" href="{% url 'Patient-detail' result.id %}" target="_blank">Detail</a> 
+                                        <a class="btn btn-info" href="{% url 'Patient-detail' result.id %}" target="_blank">Detail</a> 
                                         {% comment %} <a class="btn btn-warning" href="{% url 'items-list' result.id %}" target="_blank">pos</a> {% endcomment %}
-                                        <a class="btn btn-warning" href="{% url 'items-list2' result.id %}" target="_blank">sale</a> 
-                                        <a class="btn btn-warning" href="{% url 'cashbalance' result.id %}" target="_blank">cash </a> 
-                                        <a class="btn btn-warning" href="{% url 'ballsbalance' result.id %}" target="_blank">balls</a> 
+                                        <a class="btn btn-success" href="{% url 'items-list2' result.id %}" target="_blank">sale</a> 
+                                        <!-- <a class="btn btn-warning" href="{% url 'cashbalance' result.id %}" target="_blank">cash </a> 
+                                        <a class="btn btn-warning" href="{% url 'ballsbalance' result.id %}" target="_blank">Pulse</a>  -->
                                         </div>
                                   </td>      
                   {% endfor %}

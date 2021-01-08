@@ -7,7 +7,7 @@
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
-
+ 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
@@ -47,9 +47,31 @@
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
-          <div class="col-sm-6">
-                   <h3 class="info-box-text text-center text-muted"> {{Patientdata.PatientName}}</h4>
-                    <h3 class="info-box-number text-center text-muted mb-0">{{Patientdata.PatientMobile1}}</h4>
+          <div class="col-sm-12">
+                   
+                      <table  class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>Gender</th>
+                          <th>age</th>
+                          <th>Job</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                             
+                          <td>{{Patientdata.PatientName}} {{Patientdata.PatientSecondName}} {{Patientdata.PatientThirdName}}</td>
+                          <td>{{Patientdata.PatientMobile1}} -- {{Patientdata.PatientMobile2}}  </td>
+                          <td>{{Patientdata.Gender}}  </td>
+                          <td>{{age}}  </td>
+                          <td>{{Patientdata.Jop}}  </td>
+                        </tr>
+                        
+                        
+                        </tfoot>
+                      </table>       
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -64,8 +86,15 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
+
+        {% url 'ballsbalance' Patientdata.id  as the_url %}
+        {% include "core/templates/includesdetils/pulses.html" with link=the_url %}
+
+        {% url 'cashbalance' Patientdata.id  as the_url2 %}
+        {% include "core/templates/includesdetils/cash.html" with link=the_url2 %}
+
         <!-- SELECT2 EXAMPLE -->
-        <div class="card card-default">
+        <!-- <div class="card card-default">
           <div class="card-header">
             <h3 class="card-title">Pyments</h3>
 
@@ -77,10 +106,10 @@
                 <i class="fas fa-times"></i>
               </button>
             </div>
-          </div>
+          </div> -->
           <!-- /.card-header -->
-          <div class="card-body">
-            <table id="example1" class="table table-bordered table-striped">
+          <!-- <div class="card-body">
+            <table  class="table table-bordered table-striped">
               <thead>
               <tr>
                 <th>Name</th>
@@ -102,14 +131,14 @@
               </tfoot>
             </table>
              
-          </div>
+          </div> -->
           <!-- /.card-body -->
           
-        </div>
+        <!-- </div> -->
         <!-- /.card -->
         
 
-        <div class="card card-default">
+        <!-- <div class="card card-default">
           <div class="card-header">
             <h3 class="card-title">sales</h3>
 
@@ -121,10 +150,10 @@
                 <i class="fas fa-times"></i>
               </button>
             </div>
-          </div>
+          </div> -->
           <!-- /.card-header -->
-          <div class="card-body">
-            <table id="example3" class="table table-bordered table-striped">
+          <!-- <div class="card-body">
+            <table  class="table table-bordered table-striped">
               <thead>
               <tr>
                 <th>Items Name</th>
@@ -147,13 +176,13 @@
               </tfoot>
             </table>
              
-          </div>
+          </div> -->
           <!-- /.card-body -->
           
-        </div>
+        <!-- </div> -->
         <div class="card card-default">
           <div class="card-header">
-            <h3 class="card-title">Balls Transaction</h3>
+            <h3 class="card-title">Balls Transaction from or to another customer</h3>
 
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -193,21 +222,21 @@
           <!-- /.card-body -->
           
         </div>
-        <div class="card card-default">
-          <div class="card-header">
+        <!-- <div class="card card-default">
+          <div class="card-header" id="headingTwo">
             <h3 class="card-title">Calls History</h3>
 
             <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse" data-target="#collapseThree">
                 <i class="fas fa-minus"></i>
               </button>
               <button type="button" class="btn btn-tool" data-card-widget="remove">
                 <i class="fas fa-times"></i>
               </button>
             </div>
-          </div>
+          </div> -->
           <!-- /.card-header -->
-          <div class="card-body">
+          <!-- <div class="card-body" id="collapseTwo">
             <table id="example3" class="table table-bordered table-striped">
               <thead>
               <tr>
@@ -236,10 +265,10 @@
               </tfoot>
             </table>
              
-          </div>
+          </div> -->
           <!-- /.card-body -->
           
-        </div>
+        <!-- </div> -->
 
         <div class="card card-default">
           <div class="card-header">
@@ -287,7 +316,7 @@
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
-  </div>
+    
 
 {% endblock content %}
 

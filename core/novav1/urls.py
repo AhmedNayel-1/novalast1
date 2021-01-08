@@ -27,14 +27,15 @@ from . import views
 # ]
 
 urlpatterns = [
-    path("newPatient", views.PatientCreateView.as_view(), name="Patient-create"),
+    path("newPatient", views.PatientCreateView, name="Patient-create"),
     path("newreservation", views.ReservationCreateView.as_view(), name="Reservation-create"),
     path("datareservation", views.ReservationData.as_view(), name="Reservation-data"),
     path("PackagesCreate", views.PackagesCreateView.as_view(), name="Packages-create"),
     #path('Patientsearch/',views.Search,name="Patient-search"),
     path("roomCreate", views.RoomCreateView.as_view(), name="room-create"),
     path("area", views.AreaCreateView.as_view(), name="area-create"),
-    
+    path("jobs", views.jobsCreateView.as_view(), name="job-create"),
+
     # path("Device", views.DeviceCreateView.as_view(), name="Device-create"), 
     # path("DoctorIn", views.DoctorInCreateView.as_view(), name="DoctorIn-create"), 
     # path("DoctorOut", views.DoctorOutCreateView.as_view(), name="DoctorOut-create"), 
@@ -105,5 +106,8 @@ urlpatterns = [
     path('ballsbalance/<int:pid>/', views.ballsbalance, name='ballsbalance'),
 
     path('reserv', views.reserv, name='reserv'),# for test
+
+
+    path('addnew',views.add_new_client, name="add-new-client")
     
 ]

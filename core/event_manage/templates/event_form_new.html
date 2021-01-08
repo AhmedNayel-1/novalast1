@@ -39,7 +39,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Reservation Form</h1>
+            
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -81,7 +81,7 @@
                         <label for="exampleInputEmail1">Name </label>
                         <select name="Patient" class="form-control select2" >
                           {% for item in pe%}
-                          <option value={{item.pk}}>{{item.PatientName}}</option>
+                          <option value={{item.pk}}>{{item.PatientName}} {{item.PatientSecondName}} {{item.PatientThirdName}}</option>
                           {%endfor%}
                         </select>
                         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
@@ -101,7 +101,7 @@
                         <br>
                             <div class='col-md-5'>
                                 <div class="form-group">
-                                  <label for="exampleInputEmail1">From:</label>
+                                  <label for="exampleInputEmail1">Preferred Date</label>
                                    <div class="input-group date" id="datetimepicker7" data-target-input="nearest">
                                         <input type="text" name="start_date" class="form-control datetimepicker-input" data-target="#datetimepicker7"/>
                                         <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
@@ -110,7 +110,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class='col-md-5'>
+                            <!-- <div class='col-md-5'>
                                 <div class="form-group">
                                   <label for="exampleInputEmail1">To:</label>
                                    <div class="input-group date" id="datetimepicker8" data-target-input="nearest">
@@ -120,7 +120,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="container">
                               <div class="row">
                                 <div class='col-md-5'>
@@ -311,7 +311,7 @@
   <script type="text/javascript">
     $(function () {
         $('#datetimepicker7').datetimepicker({
-          format: 'Y-MM-DD HH:mm:ss'
+          format: 'Y-MM-DD 00:00:00'
         });
         $('#datetimepicker8').datetimepicker({
           format: 'Y-MM-DD HH:mm:ss'

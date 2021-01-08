@@ -51,15 +51,37 @@
           <div class="col-sm-6">
             <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">POS Terminal</li>
+              <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">POS Terminal</li> -->
             </ol>
           </div>
-            <div class="col-24 col-sm-24">
+            <div class="col-sm-12">
                   <div class="info-box bg-light">
                     <div class="info-box-content">
-                      <h3 class="info-box-text text-center text-muted"> {{Patientdata.PatientName}}</h4>
-                      <span class="info-box-number text-center text-muted mb-0">{{Patientdata.PatientMobile1}}</span>
+                     
+                      <table  class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>Gender</th>
+                          <th>age</th>
+                          <th>Job</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                             
+                          <td>{{Patientdata.PatientName}} {{Patientdata.PatientSecondName}} {{Patientdata.PatientThirdName}}</td>
+                          <td>{{Patientdata.PatientMobile1}} -- {{Patientdata.PatientMobile2}}  </td>
+                          <td>{{Patientdata.Gender}}  </td>
+                          <td>{{age}}  </td>
+                          <td>{{Patientdata.Jop}}  </td>
+                        </tr>
+                        
+                        
+                        </tfoot>
+                      </table> 
                     </div>
                   </div></div>
                   
@@ -136,8 +158,10 @@
                 </div>
                 <div>
                   <div class="filter-container p-0 row">
-                 
-                     <table id="example1" class="table table-bordered table-hover">
+                    <input id="search" type="text" class="form-control"  placeholder="Search for service .....">
+                      <br> <br>
+
+                     <table  class="table table-bordered table-hover">
                   <thead>
                   <tr>
                     <th>title</th>
@@ -146,7 +170,7 @@
                    
                   </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="table">
                    {% for item in cat_all %}
                   <tr>
                     <td><a href="{% url 'add-to-cart' id=item.id pid=Patientdata.id %}"> {{item.title}}</a> </td>
@@ -185,7 +209,7 @@
           <div class="col-8">
             <div class="card card-primary">
               <div class="card-header">
-                <h4 class="card-title">clinet orders</h4>
+                <h4 class="card-title"> orders For {{Patientdata.PatientName}} {{Patientdata.PatientSecondName}} {{Patientdata.PatientThirdName}}</h4>
               </div>
               <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped">
@@ -195,7 +219,7 @@
                       <th> Name</th>
                       <th> Category</th>
                       <th>Price</th>
-                      <th>Balls</th>
+                      <th>Pulse</th>
                       <th>Qty</th>                      
                       <th>Total Price</th>
                   </tr>
@@ -208,8 +232,8 @@
             <td>{{ order_item.item.title }}</td>
             <td>{{ order_item.item.category.title }}</td>
             <td>{{ order_item.price }}</td>
-            {% if order_item.item.CountBalces != 0 %}
-            <td>{{ order_item.item.CountBalces |floatformat:0 }}</td>
+            {% if order_item.item.BalcesNumber != 0 %}
+            <td>{{ order_item.item.BalcesNumber |floatformat:0 }}</td>
             {% else %}
             <td></td>
             {% endif %}
@@ -254,12 +278,13 @@
         
         <tr>
         	<td colspan="5">
+            {% load crispy_forms_tags %}
             <form method="POST" action="" >
               {% csrf_token %}
-              <div class="input-group">
+              
+              <div class="form-group col-md-4">
                 
-                {{ form.Discount }}
-                
+                {{ form.Discount|as_crispy_field }}
               </div>
               <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Payment</button>
@@ -417,5 +442,14 @@
         "responsive": true,
       });
     });
+  </script>
+  <script>
+  $("#search").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#table tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+
   </script>
 {% endblock javascripts %}

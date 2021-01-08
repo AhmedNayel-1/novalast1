@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" >
+{% load crispy_forms_tags %}
 <head>
   <meta charset="UTF-8">
   <title>CodePen - FullCalendar use to add event onclick with bootstrap 3 </title>
@@ -22,10 +23,47 @@
 <br>
 <br>
 <div class="container">
-  <h1>Heading Here</h1>
+  <!-- <h1>Heading Here</h1>
   <div class="alert alert-warning">
     <i class="glyphicon glyphicon-exclamation-sign"></i> From <strong>1st</strong> of <strong>Aprial</strong> As per labour law first 5 paid holiday consider as planning holidays.
+  </div> -->
+  <div class="container">
+    
+    <h2>Inline form</h2>
+  
+        <form class="form-inline">
+
+          <div class="form-group">
+                <!-- <label>Location</label> -->
+                {{ filter.form.event_doctor |as_crispy_field }}
+            </div>
+            <div class="form-group">
+                <!-- <label>Status</label> -->
+                {{ filter.form.event_type |as_crispy_field }}
+            </div>
+            <div class="form-group">
+              <!-- <label>Status</label> -->
+              {{ filter.form.branch_event |as_crispy_field }}
+          </div>
+          <div class="form-group">
+            <!-- <label>Status</label> -->
+            {{ filter.form.event_service |as_crispy_field }}
+        </div>
+        <div class="form-group">
+          <!-- <label>Status</label> -->
+          {{ filter.form.event_clinic |as_crispy_field }}
+      </div>
+      
+      
+          <button type="submit" class="btn btn-primary mb-2">Confirm identity</button>
+      
+        </form>
+
+      
+    
+    <!-- /.card-body -->
   </div>
+  <br>
   <div id='calendarFull'></div>
 </div>
 
@@ -100,7 +138,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label" for="name">Name</label>
-                                            <select  name="Patient" class="form-control select2">
+                                            <select  name="Patient" class="form-control select2" required>
+                                              <option value="">select name</option>
                                               {% for item in pe%}
                                               <option value={{item.pk}}>{{item.PatientName}}</option>
                                               {%endfor%}
@@ -111,7 +150,10 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label" for="email">Doctor</label>
-                                            <select  name="doctor" class="form-control">
+                                            <select  name="doctor" class="form-control" required 
+                                            oninvalid="this.setCustomValidity('please select doctor')"
+                                            oninput="this.setCustomValidity('')">
+                                              <option value="">select doctor</option>
                                               {% for item in Doc%}
                                               <option value={{item.pk}}>{{item.DocName}}</option>
                                               {%endfor%}
@@ -122,7 +164,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label" for="date">Branch</label>
-                                            <select  name="branch" class="form-control">
+                                            <select  name="branch" class="form-control" required>
+                                              <option value="">select branch</option>
                                               {% for item in Br%}
                                               <option value={{item.id}}>{{item.BranchName}}</option>
                                               {%endfor%}
@@ -133,7 +176,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label" for="time">Clinic</label>
-                                            <select  name="clinic" class="form-control">
+                                            <select  name="clinic" class="form-control" required>
+                                              <option value="">select room</option>
                                               {% for item in Cl%}
                                               <option value={{item.pk}}>{{item.ClincName}}</option>
                                               {%endfor%}
@@ -145,6 +189,7 @@
                                         <div class="form-group">
                                             <label class="control-label" for="appointmentfor">Appointment For</label>
                                             <select name="cat" class="form-control" onchange="showDiv(this)"  >
+                                              <option value="">select body parts</option>
                                               {% for item in cat%}
                                               <option value={{item.pk}}>{{item.title}}</option>
                                               {%endfor%}
@@ -327,7 +372,8 @@
     editable: true,
     slotDuration: '00:15:00',
     slotLabelInterval: 15,
-    
+    minTime: '00:00:00',
+    maxTime: '23:00:00',
     allDaySlot: true,
     slotLabelFormat: {
       hour: "numeric",
@@ -345,31 +391,13 @@
     editable: true,
     selectable: true,
     dayMaxEvents: true, // allow "more" link when too many events
-    dayMinWidth: 200,
-      resources: [
-          { id: 'truck1', title: 'Truck 1' },
-          { id: 'truck2', title: 'Truck 2' },
-          { id: 'truck3', title: 'Truck 3' }
-
-      ],
+    
       headerToolbar: {
       left: 'prev,next today',
       center: 'title',
       right: 'resourceTimeGridDay,resourceTimeGridTwoDay,resourceTimeGridWeek,dayGridMonth'
     },
-    views: {
-      resourceTimeGridTwoDay: {
-        type: 'resourceTimeGrid',
-        duration: { days: 2 },
-        buttonText: '2 days',
-      }
-    },
-    resources: [
-      { id: 'a', title: 'Room A' },
-      { id: 'b', title: 'Room B', eventColor: 'green' },
-      { id: 'c', title: 'Room C', eventColor: 'orange' },
-      { id: 'd', title: 'Room D', eventColor: 'red' }
-    ],
+    
     events: [
           {% for i in filter.qs %}
             {
@@ -377,7 +405,7 @@
                 title: "{{ i.event_name}}",
                 start: '{{ i.start_date.isoformat }}',
                 end: '{{ i.end_date.isoformat }}',
-                url :"editevent/{{ i.event_id}}",
+                // url :"editevent/{{ i.event_id}}",
                 description:'{{ i.start_date|time }} to {{ i.end_date|time }}| Doctor: {{ i.event_doctor}} |room: {{ i.event_event_clinic}} | service:{{ i.event_service}}  ',
                 {% if i.arrive == True %}
                     backgroundColor: '#00a65a', //Success (green)
@@ -395,7 +423,7 @@
     eventLimit: true,
     selectable: true,
     selectHelper: true,
-    select: function( start, end, jsEvent, view ) {
+    select: function( start, end, jsEvent, view , allDay ) {
         // set values in inputs
         $('#event-modal').find('input[name=evtStart]').val(
             start.format('YYYY-MM-DD HH:mm:ss')
@@ -430,10 +458,24 @@
     },
     eventClick: function(event) {
             // Display the modal and set the values to the event values.
-            var id = event.id;
+            
+            // {% for i in filter.qs %}
+            // var id = {{i.event_id}};
+            // var event_name = {{i.event_name}};
+            // var start_date = {{i.start_date}};
+            // var end_date = {{i.end_date}};
+            // var event_type = {{i.event_type}};
+            // var event_doctor = {{i.event_doctor}};
+            // var event_clinic = {{i.event_clinic}};
+            // var branch_event = {{i.branch_event}};
+            // var event_note = {{i.event_note}};
+            // var event_area = {{i.event_area}};
+            // {%endfor%}
+            var id =event.id ;
+           
             $('#edit-modal').find('input[name=evtid]').val(id)
             
-            // $('#edit-modal').modal('show');
+            $('#edit-modal').modal('show');
     },
     eventMouseover: function(event, jsEvent, view) {
     $('.fc-event-inner', this).append('<div id=\"'+event.id+'\" class=\"hover-end\">'+$.fullCalendar.formatDate(event.end, 'h:mmt')+'</div>');

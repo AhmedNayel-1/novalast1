@@ -31,7 +31,7 @@ class statue(models.Model):
 
 
 class calls(models.Model):
-    Customer     = models.ForeignKey("novav1.Patient", on_delete=models.CASCADE)
+    Customer     = models.ForeignKey("novav1.Patient", on_delete=models.CASCADE ,blank=True,null=True)
     user         = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,blank=True,null=True)
     Note         = models.TextField(max_length=100)
     Statue       = models.ForeignKey("statue", on_delete=models.CASCADE)

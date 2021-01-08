@@ -25,28 +25,31 @@ class PatientNameWidget(s2forms.ModelSelect2Widget):
 class PatientForm(forms.ModelForm):
     class Meta:
         model = models.Patient
-        # fields = ['PatientName','Gender','PatientMobile1','PatientMobile2','ComeFrom',
-        #    'PatientFfriend','Birtdate','PatientCode','Jop','Area','Active','PatientPackages']
-        fields="__all__"
-        # widgets = {
-        #     'Birtdate': DateInput(attrs={'type': 'date'}),}
+        fields = ['PatientName','PatientSecondName','PatientThirdName','Gender','PatientMobile1','PatientMobile2',
+           'Birtdate','Jop','JopArea','ComeFrom','PatientFfriend','doctor']
+        
+        
             
-        # labels = {
-        #     'PatientName': ('x'),
-        #     'Gender': (''),
-        #     'Active': (''),
-        #     'PatientBbarcode': (''),
-        #     'Birtdate': (''),
-        #     'ComeFrom': (''),
-        #     'PatientFfriend': (''),
-        #     'doctor': (''),
-        #     'Jop': (''),
-        #     'Area': (''),
-        #     'PatientMobile1': (''),
-        #     'PatientMobile2': ('')
+        labels = {
+            'PatientName': (''),
+            'Gender': (''),
+            'PatientSecondName': (''),
+            'PatientBbarcode': (''),
+            'Birtdate': (''),
+            'ComeFrom': (''),
+            'PatientFfriend': (''),
+            'doctor': (''),
+            'Jop': (''),
+            'Area': (''),
+            'PatientMobile1': (''),
+            'PatientMobile2': (''),
+            'PatientThirdName': (''),
+            'JopArea': ('')
             
             
-        #     },
+            }
+        widgets = {
+            'Birtdate': DateInput(attrs={'type': 'date'}),}    
 
         # help_texts = {
         #                         'PatientName': ('اسم العميل'),
@@ -121,7 +124,12 @@ class PackagesForm(forms.ModelForm):
 class RoomForm(forms.ModelForm):  
     class Meta:
         model = models.Room
-        fields = "__all__"        
+        fields = "__all__"    
+
+class JobForm(forms.ModelForm):  
+    class Meta:
+        model = models.Jop
+        fields = "__all__"              
 
 class AddDodtonIN(forms.ModelForm):  
     class Meta:
